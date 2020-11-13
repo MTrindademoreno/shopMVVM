@@ -1,38 +1,69 @@
 package dominando.android.shopmvvm.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import dominando.android.shopmvvm.R
-import dominando.android.shopmvvm.adapters.AdapterProdutosMain
 import dominando.android.shopmvvm.model.Produtos
+import dominando.android.shopmvvm.viewModel.MainViewModel
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.getProdutos()
+        loadfragment(FragmentMain())
+        chamaFragCadastro()
+        chamaFragMAin()
+       produtoNovo()
+        adicionaSelecionados()
 
-        val listaProd = mutableListOf(
-            Produtos("https://http2.mlstatic.com/D_NQ_NP_614309-MLB43057909624_082020-W.webp","Notebook",1200.00),
-            Produtos("https://http2.mlstatic.com/D_NQ_NP_965770-MLA43260038321_082020-W.webp","Televisão 29 ",3200.00),
-            Produtos("https://http2.mlstatic.com/D_NQ_NP_715387-MLA43775429216_102020-V.webp","Celular ",800.00),
-            Produtos("https://http2.mlstatic.com/D_NQ_NP_614309-MLB43057909624_082020-W.webp","Fone de ouvido",100.00),
-            Produtos("https://http2.mlstatic.com/D_NQ_NP_614309-MLB43057909624_082020-W.webp","Geladeira",1.800),
-            Produtos("https://http2.mlstatic.com/manga-naruto-gold-edico-45-D_NQ_NP_609003-MLB31094706561_062019-W.webp","Mangá Naruto",12.00),
-            Produtos("https://http2.mlstatic.com/naruto-gold-53-D_NQ_NP_682165-MLB40033950783_122019-W.webp","Mangá Naruto",35.00),
-            Produtos("https://http2.mlstatic.com/naruto-gold-60-D_NQ_NP_775255-MLB42314185602_062020-W.webp","Mangá Naruto",12.00),
-        )
+        viewModel.actTotal.observe(this,{
+            loadfragment(FragmentTotaliza())
+        })
 
 
-        findViewById<RecyclerView>(R.id.rv_recyclerview_produtos).apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter=AdapterProdutosMain(listaProd){position->
-                Toast.makeText(this@MainActivity,"Produto selecionado",Toast.LENGTH_SHORT).show()
-
-            }
-        }
     }
+
+    private fun adicionaSelecionados() {
+        viewModel.produtoSelect.observe(this,{
+            viewModel.adicionaListaSelect(it)
+        })
+    }
+
+    private fun produtoNovo() {
+        viewModel.novoProduto.observe(this, {
+            viewModel.adicionaProduto(it)
+
+        })
+    }
+
+    private fun chamaFragMAin() {
+        viewModel.actBack.observe(this, {
+            loadfragment(FragmentMain())
+        })
+    }
+
+    private fun chamaFragCadastro() {
+        viewModel.actFloat.observe(this, {
+            loadfragment(FragmentCadastroProduto())
+        })
+    }
+
+    private fun loadfragment(fragment: Fragment) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.container_frag, fragment)
+        ft.commit()
+
+    }
+
+
 }
+
+
+

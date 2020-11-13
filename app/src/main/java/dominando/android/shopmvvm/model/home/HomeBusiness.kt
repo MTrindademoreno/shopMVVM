@@ -1,11 +1,15 @@
 package dominando.android.shopmvvm.model.home
 
 import dominando.android.shopmvvm.model.Produtos
+import java.lang.Double.sum
 
-class HomeBusinnes {
+open class HomeBusiness {
 
-    fun getProdutos():List<Produtos>{
-        val listaProd = mutableListOf(
+    lateinit var  listaProd:MutableList<Produtos>
+    var listaSelect = mutableListOf<Produtos>()
+
+    fun getProdutos():MutableList<Produtos>{
+         listaProd = mutableListOf(
             Produtos("https://http2.mlstatic.com/D_NQ_NP_614309-MLB43057909624_082020-W.webp","Notebook",1200.00),
             Produtos("https://http2.mlstatic.com/D_NQ_NP_965770-MLA43260038321_082020-W.webp","Televisão 29 ",3200.00),
             Produtos("https://http2.mlstatic.com/D_NQ_NP_715387-MLA43775429216_102020-V.webp","Celular ",800.00),
@@ -17,4 +21,26 @@ class HomeBusinnes {
         )
 return listaProd
     }
+
+    fun addProduto(produto: Produtos){
+        listaProd.add(produto)
+    }
+
+    fun addListSelect(produto: Produtos){
+        listaSelect.add(produto)
+    }
+
+    fun totaliza():Double{
+
+        var total =0.0
+        for (i in listaSelect){
+            total += i.valor
+        }
+        return total
+
+
+
+
+    }
+
 }

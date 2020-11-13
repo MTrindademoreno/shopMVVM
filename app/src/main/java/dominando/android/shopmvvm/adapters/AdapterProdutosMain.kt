@@ -35,12 +35,13 @@ class AdapterProdutosMain(
     }
     class ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView) {
         fun bind(produto: Produtos, clickProduto: (Int) -> Unit) = with(itemView){
-Picasso.get().load(produto.imgProduto).into(findViewById<ImageView>(R.id.img_produto))
+            Picasso.get().load(produto.imgProduto).into(findViewById<ImageView>(R.id.img_produto))
             findViewById<TextView>(R.id.txt_nome_produto).text = produto.nome
-            findViewById<TextView>(R.id.txt_valor).text =produto.valor.toString()
+            findViewById<TextView>(R.id.txt_valor).text = produto.valor.toString()
 
             findViewById<ConstraintLayout>(R.id.layout_produto).setOnClickListener {
                 clickProduto(this@ViewHolder.adapterPosition)
+
             }
 
         }
